@@ -7,6 +7,7 @@ import com.example.spring_story_hub.story.models.Story;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +39,15 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Role role;
+
+    private boolean isActive;
+    @Column(nullable = false)
+    //· createdOn – LocalDateTime, the date and time the User account was initialized
+    private LocalDateTime createdOn;
+    @Column(nullable = false)
+    //· updatedOn – LocalDateTime, the date and time the User account was updated
+    private LocalDateTime updatedOn;
+
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
     @OrderBy("createdOn DESC")

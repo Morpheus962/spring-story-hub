@@ -27,7 +27,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 )
 
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                         .logoutSuccessUrl("/")
                 );
 

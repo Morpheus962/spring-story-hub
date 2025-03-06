@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Hub - Home</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar text-white vh-100">
+            <div class="position-sticky p-3">
+                <h2 class="text-center">Story Hub</h2>
+                <hr>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/home">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/profile">👤 My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/stories">📖 Browse Stories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/stories/top">🔥 Top Stories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/logout">🚪 Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Welcome, <span th:text="${user.username}">User</span>!</h1>
+                <a href="/stories/new" class="btn btn-primary">✏️ Create Story</a>
+            </div>
+
+            <hr>
+
+            <!-- Top Stories Section -->
+            <h2>🔥 Most Liked Stories</h2>
+            <div class="row">
+                <div th:each="story : ${topStories}" class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${story.title}">Story Title</h5>
+                            <p class="card-text" th:text="${story.description}">Short description...</p>
+                            <p class="text-muted">❤️ <span th:text="${story.likes}">0</span> Likes</p>
+                            <a th:href="@{/stories/{id}(id=${story.id})}" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
