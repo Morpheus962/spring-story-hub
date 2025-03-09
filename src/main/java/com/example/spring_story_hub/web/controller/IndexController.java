@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.UUID;
 
 @Controller
+
 public class IndexController {
     private final UserService userService;
 

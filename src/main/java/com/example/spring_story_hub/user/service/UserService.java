@@ -5,6 +5,7 @@ import com.example.spring_story_hub.security.AuthenticationMetaData;
 import com.example.spring_story_hub.user.models.Role;
 import com.example.spring_story_hub.user.models.User;
 import com.example.spring_story_hub.user.repository.UserRepository;
+import com.example.spring_story_hub.web.dto.EditUserRequest;
 import com.example.spring_story_hub.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -73,5 +74,14 @@ public class UserService implements UserDetailsService {
 
         return new AuthenticationMetaData(user.getId(), username, user.getPassword(), user.getRole(), user.isActive());
 
+    }
+
+    public void editUserDetails(UUID id, EditUserRequest editUserRequest) {
+        User user = getById(id);
+        user.setFirstName(editUserRequest.getFirstName());
+        user.setLastName(editUserRequest.getLastName());
+        user.setEmail(editUserRequest.getEmail());
+        user.setProfilePicture(editUserRequest.getProfilePicture());
+        userRepository.save(user);
     }
 }
