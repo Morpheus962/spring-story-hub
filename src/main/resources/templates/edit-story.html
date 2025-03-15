@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Story</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" /> <!-- Include your CSS -->
+</head>
+<body>
+
+<h1>Edit Story</h1>
+
+<form th:action="@{/stories/{storyId}/edit(storyId=${story.id})}" th:object="${editStoryRequest}" method="POST">
+    <!-- Spring requires this hidden field to simulate a PUT request -->
+    <input type="hidden" name="_method" value="PUT" />
+
+    <!-- Title -->
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" th:field="*{title}" maxlength="30" required />
+    <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></p>
+
+    <!-- Content -->
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" th:field="*{content}" maxlength="1000" required></textarea>
+    <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></p>
+
+    <!-- Genre -->
+    <label for="genre">Genre:</label>
+    <select id="genre" name="genre" th:field="*{genre}" required>
+        <option th:each="genre : ${T(com.example.spring_story_hub.story.models.Genre).values()}"
+                th:value="${genre}"
+                th:text="${genre}"></option>
+        </option>
+    </select>
+    <p th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}" class="error"></p>
+
+    <!-- Submit Button -->
+    <button type="submit">Update Story</button>
+</form>
+
+<!-- Cancel Button -->
+<a th:href="@{/stories/{storyId}(storyId=${story.id})}">
+    <button type="button">Cancel</button>
+</a>
+
+</body>
+</html>

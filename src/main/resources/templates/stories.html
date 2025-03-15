@@ -1,0 +1,22 @@
+<!-- stories.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Stories</title>
+</head>
+<body>
+<h1>All Stories</h1>
+<ul>
+    <li th:each="story : ${stories}">
+        <a th:href="@{/stories/{id}(id=${story.id})}" th:text="${story.title}"></a>
+    </li>
+</ul>
+<a href="/stories/create">Create New Story</a>
+</body>
+</html>
+
+
+

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Details</title>
+</head>
+<body>
+
+<h1 th:text="${editStoryRequest.title}"></h1>
+<p th:text="${editStoryRequest.content}"></p>
+<p><strong>Genre:</strong> <span th:text="${editStoryRequest.genre}"></span></p>
+
+<!-- Edit Button (Only visible to the story owner) -->
+<div th:if="${currentUserId != null and currentUserId == story.owner.id}">
+    <a th:href="@{/stories/{storyId}/edit(storyId=${story.id})}">
+        <button>Edit Story</button>
+    </a>
+</div>
+
+<!-- Back Button -->
+<a href="/stories">Back to Stories</a>
+
+</body>
+</html>
