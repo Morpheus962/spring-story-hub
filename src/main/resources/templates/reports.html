@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Reports</title>
+  <link rel="stylesheet" href="styles-reports.css">
+</head>
+<body>
+<header>
+  <h1>Admin Panel - Reported Stories</h1>
+</header>
+
+<main>
+  <section class="reports-list">
+    <h2>All User Reports</h2>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Report ID</th>
+        <th>Reported By</th>
+        <th>Story Title</th>
+        <th>Reason</th>
+        <th>Reported At</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Loop through the reports -->
+      <th:block th:each="report : ${reports}">
+        <tr>
+          <td th:text="${report.id}"></td>
+          <td th:text="${report.reporter.username}"></td>
+          <td th:text="${report.reportedStory.title}"></td>
+          <td th:text="${report.reason}"></td>
+          <td th:text="${report.reportedAt}"></td>
+        </tr>
+      </th:block>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+</body>
+</html>

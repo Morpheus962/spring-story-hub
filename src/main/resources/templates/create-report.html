@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Report</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Your styles -->
+</head>
+<body>
+
+<div class="container">
+    <h1>Create Report for Story: <span th:text="${story.title}"></span></h1>
+
+    <!-- Success message if report creation is successful -->
+    <div th:if="${param.reportSuccess}">
+        <div class="alert alert-success">
+            Report submitted successfully!
+        </div>
+    </div>
+
+    <!-- Form to create a report -->
+    <form th:action="@{/stories/{id}/report(id=${story.id})}" method="POST" th:object="${createReportRequest}">
+
+        <div class="form-group">
+            <label for="reason">Reason for Report:</label>
+            <textarea id="reason" name="reason" th:field="*{reason}" required></textarea>
+            <div class="error">
+                <p th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}">Reason is required and must not exceed 1000 characters.</p>
+            </div>
+        </div>
+
+        <!-- Submit button to submit the report -->
+        <div>
+            <button type="submit" class="btn btn-danger">Report this Story</button>
+        </div>
+    </form>
+
+    <div>
+        <a th:href="@{/stories/{id}(id=${story.id})}" class="btn btn-secondary">Back to Story</a>
+    </div>
+
+</div>
+
+</body>
+</html>

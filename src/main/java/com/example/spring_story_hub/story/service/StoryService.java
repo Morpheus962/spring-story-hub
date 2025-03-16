@@ -1,12 +1,15 @@
 package com.example.spring_story_hub.story.service;
 
+import com.example.spring_story_hub.report.models.Report;
 import com.example.spring_story_hub.story.models.Story;
 import com.example.spring_story_hub.story.repository.StoryRepository;
 import com.example.spring_story_hub.user.models.User;
 import com.example.spring_story_hub.user.repository.UserRepository;
 import com.example.spring_story_hub.user.service.UserService;
+import com.example.spring_story_hub.web.dto.CreateReportRequest;
 import com.example.spring_story_hub.web.dto.CreateStoryRequest;
 import com.example.spring_story_hub.web.dto.EditStoryRequest;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,4 +71,5 @@ public class StoryService {
         storyRepository.save(story);
 
     }
+
 }

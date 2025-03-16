@@ -49,7 +49,7 @@ public class User {
     private LocalDateTime updatedOn;
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("createdOn DESC")
     private List<Story> stories = new ArrayList<>();
 

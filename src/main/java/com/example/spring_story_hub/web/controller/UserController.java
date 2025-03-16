@@ -1,17 +1,17 @@
 package com.example.spring_story_hub.web.controller;
 
+import com.example.spring_story_hub.security.AuthenticationMetaData;
+import com.example.spring_story_hub.user.models.Role;
 import com.example.spring_story_hub.user.models.User;
 import com.example.spring_story_hub.user.service.UserService;
 import com.example.spring_story_hub.web.dto.EditUserRequest;
 import com.example.spring_story_hub.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.UUID;
@@ -51,4 +51,6 @@ public class UserController {
         return new ModelAndView("redirect:/users/" + id + "/profile");
 
     }
+
+
 }

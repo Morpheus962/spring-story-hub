@@ -1,13 +1,17 @@
 package com.example.spring_story_hub.web.controller;
 
+import com.example.spring_story_hub.report.service.ReportService;
 import com.example.spring_story_hub.security.AuthenticationMetaData;
 import com.example.spring_story_hub.story.models.Story;
 import com.example.spring_story_hub.story.service.StoryService;
+import com.example.spring_story_hub.user.models.Role;
 import com.example.spring_story_hub.user.models.User;
 import com.example.spring_story_hub.user.service.UserService;
+import com.example.spring_story_hub.web.dto.CreateReportRequest;
 import com.example.spring_story_hub.web.dto.CreateStoryRequest;
 import com.example.spring_story_hub.web.dto.EditStoryRequest;
 import com.example.spring_story_hub.web.mapper.DtoMapper;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +31,14 @@ import java.util.UUID;
 public class StoryController {
     private final StoryService storyService;
     private final UserService userService;
+    private final ReportService reportService;
 
     @Autowired
-    public StoryController(StoryService storyService, UserService userService) {
+    public StoryController(StoryService storyService, UserService userService, ReportService reportService) {
         this.storyService = storyService;
         this.userService = userService;
 
+        this.reportService = reportService;
     }
 
 
@@ -118,5 +124,32 @@ public class StoryController {
 
         storyService.editStory(id, editStoryRequest);
         return new ModelAndView("redirect:/stories/" + id);
+    }
+
+
+    @GetMapping("/{id}/report")
+    public ModelAndView createReportPage(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetaData authenticationMetaData){
+        UUID userId = authenticationMetaData.getId();
+        User user = userService.getById(userId);
+        Story story = storyService.getById(id);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("create-report");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("story", story);
+        modelAndView.addObject("createReportRequest", new CreateReportRequest());
+        return modelAndView;
+
+    }
+
+    @PostMapping("/{id}/report")
+    public String createReport(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetaData authenticationMetaData, @Valid CreateReportRequest createReportRequest, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "create-report";
+        }
+        Story story = storyService.findById(id);
+        UUID userId = authenticationMetaData.getId();
+        reportService.createReport(id, userId, createReportRequest);
+
+        return "redirect:/stories/" + id + "?reportSuccess=true";
     }
 }

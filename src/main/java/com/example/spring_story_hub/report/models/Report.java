@@ -14,7 +14,6 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -39,7 +39,7 @@ public class Story {
     @ManyToOne
     private User owner;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "story")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "story")
     @OrderBy("createdOn DESC")
     private List<Comment> comments;
 
