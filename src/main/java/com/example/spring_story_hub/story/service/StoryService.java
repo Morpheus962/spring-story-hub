@@ -1,5 +1,8 @@
 package com.example.spring_story_hub.story.service;
 
+import com.example.spring_story_hub.exception.DomainException;
+import com.example.spring_story_hub.like.models.StoryLike;
+import com.example.spring_story_hub.like.repository.StoryLikeRepository;
 import com.example.spring_story_hub.report.models.Report;
 import com.example.spring_story_hub.story.models.Story;
 import com.example.spring_story_hub.story.repository.StoryRepository;
@@ -16,18 +19,21 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class StoryService {
     private final StoryRepository storyRepository;
     private final UserService userService;
+    private final StoryLikeRepository storyLikeRepository;
 
     @Autowired
-    public StoryService(StoryRepository storyRepository, UserRepository userRepository, UserService userService) {
+    public StoryService(StoryRepository storyRepository, UserRepository userRepository, UserService userService, StoryLikeRepository storyLikeRepository) {
         this.storyRepository = storyRepository;
         this.userService = userService;
 
+        this.storyLikeRepository = storyLikeRepository;
     }
 
     public List<Story> findAllStories() {
@@ -72,4 +78,18 @@ public class StoryService {
 
     }
 
+    public void likeStory(UUID storyId, UUID userId) {
+        Story story = getById(storyId);
+        User user = userService.getById(userId);
+        Optional<StoryLike> optionalStoryLike = storyLikeRepository.findByUserAndStory(user, story);
+        if (optionalStoryLike.isPresent()){
+            throw new DomainException("Username with id [%s] already liked this story.".formatted(user.getId()));
+        }
+        StoryLike like = StoryLike.builder()
+                .story(story)
+                .user(user)
+                .build();
+        story.getStoryLikes().add(like);
+        storyRepository.save(story);
+    }
 }

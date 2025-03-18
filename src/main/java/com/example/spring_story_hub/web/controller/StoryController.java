@@ -1,5 +1,6 @@
 package com.example.spring_story_hub.web.controller;
 
+import com.example.spring_story_hub.like.models.StoryLike;
 import com.example.spring_story_hub.report.service.ReportService;
 import com.example.spring_story_hub.security.AuthenticationMetaData;
 import com.example.spring_story_hub.story.models.Story;
@@ -54,11 +55,17 @@ public class StoryController {
     @GetMapping("/{id}")
     public ModelAndView readStory(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetaData authenticationMetaData) {
         Story story = storyService.findById(id);
+        long storyLikes = story.getStoryLikes().stream().count();
+        String username = authenticationMetaData.getUsername();
+        List<StoryLike> getLastThreeLikes = story.getStoryLikes().stream().limit(3).toList();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("story-details");
         modelAndView.addObject("story", story);
+        modelAndView.addObject("storyLikes", storyLikes);
+        modelAndView.addObject("getLastThreeLikes", getLastThreeLikes);
         modelAndView.addObject("editStoryRequest", DtoMapper.mapToStoryRequest(story));
         modelAndView.addObject("currentUserId", authenticationMetaData.getId());
+        modelAndView.addObject("username", username);
         return modelAndView;
 
     }
@@ -151,5 +158,14 @@ public class StoryController {
         reportService.createReport(id, userId, createReportRequest);
 
         return "redirect:/stories/" + id + "?reportSuccess=true";
+    }
+
+    @PostMapping("/{id}/like")
+    public String likeStory(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetaData authenticationMetaData){
+        UUID userId = authenticationMetaData.getId();
+        storyService.likeStory(id, userId);
+
+        return "redirect:/stories/" + id;
+
     }
 }
