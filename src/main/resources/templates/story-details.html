@@ -9,6 +9,29 @@
 </head>
 <body class="bg-light">
 
+<h2>Comments</h2>
+
+<!-- Comment Form -->
+<form th:action="@{'/comments/story/' + ${id}}" method="POST" th:object="${newComment}">
+    <textarea th:field="*{content}" placeholder="Write a comment..." required></textarea>
+    <button type="submit">Post Comment</button>
+</form>
+
+<!-- Show Validation Errors -->
+<div th:if="${#fields.hasErrors('newComment.content')}" class="error">
+    <p th:errors="*{newComment.content}"></p>
+</div>
+
+<!-- Display Comments -->
+<ul>
+    <li th:each="comment : ${comments}">
+        <strong th:text="${comment.owner.username}"></strong>:
+        <span th:text="${comment.content}"></span>
+        <small th:text="${#temporals.format(comment.createdOn, 'dd MMM yyyy HH:mm')}"></small>
+    </li>
+</ul>
+
+<hr>
 <div class="container mt-5">
     <div class="card shadow-sm p-4">
         <h1 class="mb-3 text-primary">Story: <span th:text="${story.title}"></span></h1>

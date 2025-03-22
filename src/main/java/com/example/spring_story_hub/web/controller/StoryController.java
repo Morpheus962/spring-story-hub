@@ -1,5 +1,7 @@
 package com.example.spring_story_hub.web.controller;
 
+import com.example.spring_story_hub.comment.models.Comment;
+import com.example.spring_story_hub.comment.service.CommentService;
 import com.example.spring_story_hub.like.models.StoryLike;
 import com.example.spring_story_hub.report.service.ReportService;
 import com.example.spring_story_hub.security.AuthenticationMetaData;
@@ -8,6 +10,7 @@ import com.example.spring_story_hub.story.service.StoryService;
 import com.example.spring_story_hub.user.models.Role;
 import com.example.spring_story_hub.user.models.User;
 import com.example.spring_story_hub.user.service.UserService;
+import com.example.spring_story_hub.web.dto.CommentRequest;
 import com.example.spring_story_hub.web.dto.CreateReportRequest;
 import com.example.spring_story_hub.web.dto.CreateStoryRequest;
 import com.example.spring_story_hub.web.dto.EditStoryRequest;
@@ -33,13 +36,15 @@ public class StoryController {
     private final StoryService storyService;
     private final UserService userService;
     private final ReportService reportService;
+    private final CommentService commentService;
 
     @Autowired
-    public StoryController(StoryService storyService, UserService userService, ReportService reportService) {
+    public StoryController(StoryService storyService, UserService userService, ReportService reportService, CommentService commentService) {
         this.storyService = storyService;
         this.userService = userService;
 
         this.reportService = reportService;
+        this.commentService = commentService;
     }
 
 
@@ -58,6 +63,7 @@ public class StoryController {
         long storyLikes = story.getStoryLikes().stream().count();
         String username = authenticationMetaData.getUsername();
         List<StoryLike> getLastThreeLikes = story.getStoryLikes().stream().limit(3).toList();
+        List<Comment> comments = commentService.getCommentsByStory(id);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("story-details");
         modelAndView.addObject("story", story);
@@ -66,6 +72,8 @@ public class StoryController {
         modelAndView.addObject("editStoryRequest", DtoMapper.mapToStoryRequest(story));
         modelAndView.addObject("currentUserId", authenticationMetaData.getId());
         modelAndView.addObject("username", username);
+        modelAndView.addObject("newComment", new CommentRequest());
+        modelAndView.addObject("comments", comments);
         return modelAndView;
 
     }
