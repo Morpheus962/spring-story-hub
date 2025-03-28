@@ -10,6 +10,8 @@ import com.example.spring_story_hub.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -82,6 +85,27 @@ public class UserService implements UserDetailsService {
         user.setLastName(editUserRequest.getLastName());
         user.setEmail(editUserRequest.getEmail());
         user.setProfilePicture(editUserRequest.getProfilePicture());
+        userRepository.save(user);
+    }
+
+    @Cacheable("users")
+    public List<User> getAllUsers() {
+
+        return userRepository.findAll();
+    }
+
+
+    @CacheEvict(value = "users", allEntries = true)
+    public void switchRole(UUID userId) {
+
+        User user = getById(userId);
+
+        if (user.getRole() == Role.USER) {
+            user.setRole(Role.ADMINISTRATOR);
+        } else {
+            user.setRole(Role.USER);
+        }
+
         userRepository.save(user);
     }
 }

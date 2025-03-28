@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Stories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #343a40;
+        }
+        .story-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .story-item {
+            background: white;
+            margin: 10px auto;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 60%;
+            text-align: left;
+        }
+        .story-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .story-actions {
+            margin-top: 10px;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .likes {
+            font-size: 14px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<h1>Top 10 Stories</h1>
+<ul class="story-list">
+    <li th:each="story : ${topStories}" class="story-item">
+        <a th:href="@{/stories/{id}(id=${story.id})}" th:text="${story.title}" class="story-title"></a>
+        <p class="likes">❤️ Likes: <span th:text="${story.storyLikes.size()}"></span></p>
+        <div class="story-actions">
+            <a th:href="@{/stories/{id}(id=${story.id})}" class="button">View</a>
+            <div th:if="${username != story.owner.username}" class="mb-3">
+                <form th:action="@{'/stories/' + ${story.id} + '/like'}" method="POST">
+                    <button type="submit" class="btn btn-primary">👍 Like</button>
+                </form>
+            </div>
+
+        </div>
+    </li>
+</ul>
+</body>
+</html>

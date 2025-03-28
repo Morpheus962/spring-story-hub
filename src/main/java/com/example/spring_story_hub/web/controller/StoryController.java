@@ -26,8 +26,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -156,6 +158,19 @@ public class StoryController {
 
     }
 
+    @GetMapping("/top")
+    public ModelAndView showTopStories(@AuthenticationPrincipal AuthenticationMetaData authenticationMetaData){
+        List<Story> allStories = storyService.getAllStories();
+        List<Story> topStories = allStories.stream()
+                .sorted(Comparator.comparingLong(s -> s.getStoryLikes().stream().count()))
+                .limit(10)
+                .toList();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("top-stories");
+        modelAndView.addObject("topStories", topStories);
+        return modelAndView;
+
+    }
     @PostMapping("/{id}/report")
     public String createReport(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetaData authenticationMetaData, @Valid CreateReportRequest createReportRequest, BindingResult bindingResult){
         if(bindingResult.hasErrors()){

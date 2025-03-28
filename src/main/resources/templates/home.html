@@ -25,6 +25,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/stories">📖 Browse Stories</a>
                     </li>
+                    <li class="nav-item" th:if="${user.role.name() == 'ADMINISTRATOR'}">
+                        <a class="nav-link text-white" th:href="@{/users}">📖 All Users</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/stories/top">🔥 Top Stories</a>
                     </li>
@@ -39,7 +42,7 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
             <div class="d-flex justify-content-between align-items-center">
                 <h1>Welcome, <span th:text="${user.username}">User</span>!</h1>
-                <a href="/stories/new" class="btn btn-primary">✏️ Create Story</a>
+                <a href="/stories/create" class="btn btn-primary">✏️ Create Story</a>
             </div>
 
             <hr>

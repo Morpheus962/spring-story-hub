@@ -15,6 +15,7 @@ import com.example.spring_story_hub.web.dto.EditStoryRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -91,5 +92,11 @@ public class StoryService {
                 .build();
         story.getStoryLikes().add(like);
         storyRepository.save(story);
+    }
+
+    @Cacheable("stories")
+    public List<Story> getAllStories() {
+        return storyRepository.findAll();
+
     }
 }
