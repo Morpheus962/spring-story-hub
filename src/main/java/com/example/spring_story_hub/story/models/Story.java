@@ -43,7 +43,7 @@ public class Story {
     @OrderBy("createdOn DESC")
     private List<Comment> comments;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "story")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "story")
     private List<StoryLike> storyLikes;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "reportedStory")

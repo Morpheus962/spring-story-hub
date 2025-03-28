@@ -4,6 +4,7 @@ import com.example.spring_story_hub.comment.models.Comment;
 import com.example.spring_story_hub.comment.service.CommentService;
 import com.example.spring_story_hub.like.models.StoryLike;
 import com.example.spring_story_hub.report.service.ReportService;
+import com.example.spring_story_hub.scheduler.StoryScheduler;
 import com.example.spring_story_hub.security.AuthenticationMetaData;
 import com.example.spring_story_hub.story.models.Story;
 import com.example.spring_story_hub.story.service.StoryService;
@@ -39,14 +40,16 @@ public class StoryController {
     private final UserService userService;
     private final ReportService reportService;
     private final CommentService commentService;
+    private final StoryScheduler storyScheduler;
 
     @Autowired
-    public StoryController(StoryService storyService, UserService userService, ReportService reportService, CommentService commentService) {
+    public StoryController(StoryService storyService, UserService userService, ReportService reportService, CommentService commentService, StoryScheduler storyScheduler) {
         this.storyService = storyService;
         this.userService = userService;
 
         this.reportService = reportService;
         this.commentService = commentService;
+        this.storyScheduler = storyScheduler;
     }
 
 
@@ -160,11 +163,7 @@ public class StoryController {
 
     @GetMapping("/top")
     public ModelAndView showTopStories(@AuthenticationPrincipal AuthenticationMetaData authenticationMetaData){
-        List<Story> allStories = storyService.getAllStories();
-        List<Story> topStories = allStories.stream()
-                .sorted(Comparator.comparingLong(s -> s.getStoryLikes().stream().count()))
-                .limit(10)
-                .toList();
+        List<Story> topStories = storyScheduler.getCachedTopStories();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("top-stories");
         modelAndView.addObject("topStories", topStories);
