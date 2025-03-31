@@ -1,6 +1,7 @@
 package com.example.spring_story_hub.user.service;
 
 import ch.qos.logback.core.model.Model;
+import com.example.spring_story_hub.notification.service.NotificationService;
 import com.example.spring_story_hub.security.AuthenticationMetaData;
 import com.example.spring_story_hub.user.models.Role;
 import com.example.spring_story_hub.user.models.User;
@@ -32,11 +33,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationService notificationService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.notificationService = notificationService;
     }
 
 
@@ -47,9 +50,13 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("Username %s is already taken.".formatted(registerRequest));
         }
         User user = initializeUser(registerRequest);
-        //stories, comments, storylikes, reports;
+
         userRepository.save(user);
         log.info("Successfully created user %s with id %s".formatted(user.getUsername(), user.getId()));
+        notificationService.saveNotificationPreference(user.getId(), false, null);
+
+        log.info("Successfully create new user account for username [%s] and id [%s]".formatted(user.getUsername(), user.getId()));
+
         return user;
     }
 
@@ -81,10 +88,20 @@ public class UserService implements UserDetailsService {
 
     public void editUserDetails(UUID id, EditUserRequest editUserRequest) {
         User user = getById(id);
+        if (editUserRequest.getEmail().isBlank()) {
+            notificationService.saveNotificationPreference(id, false, null);
+        }
+
         user.setFirstName(editUserRequest.getFirstName());
         user.setLastName(editUserRequest.getLastName());
         user.setEmail(editUserRequest.getEmail());
         user.setProfilePicture(editUserRequest.getProfilePicture());
+
+        if (!editUserRequest.getEmail().isBlank()) {
+            notificationService.saveNotificationPreference(id, true, editUserRequest.getEmail());
+        }
+
+
         userRepository.save(user);
     }
 

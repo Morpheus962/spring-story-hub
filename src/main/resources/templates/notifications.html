@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" th:href="@{/css/notifications.css}">
+</head>
+<body>
+<div class="home-section">
+
+
+        <div class="details-section">
+            <div class="details-section-container">
+                <strong>Source: </strong>
+                <p th:text="${#strings.isEmpty(notificationPreference.contactInfo) ? 'Edit profile and add email' : notificationPreference.contactInfo}"></p>
+            </div>
+        </div>
+
+
+        <div class="details-section">
+            <div class="details-section-container">
+                <strong>Notification state: </strong>
+                <p class="enabled-notification-status" th:if="${notificationPreference.enabled}">ENABLED</p>
+                <p class="disabled-notification-status" th:unless="${notificationPreference.enabled}">DISABLED</p>
+            </div>
+        </div>
+
+        <p>Change State:</p>
+        <div class="allowed-notification-actions">
+            <form th:action="@{'/notifications/user-preference?enabled=false'}" th:method="PUT" th:if="${notificationPreference.enabled}">
+                <button class="profile-actions-button disable-notifications">
+                    <p>Disable Notifications</p>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </form>
+            <form th:action="@{'/notifications/user-preference?enabled=true'}" th:method="PUT" th:unless="${notificationPreference.enabled}">
+                <button class="profile-actions-button enable-notifications">
+                    <p>Enable Notifications</p>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <p class="small-informative-text-bottom">Any action that you take will affect the notification mechanism for your account!</p>
+    </div>
+
+    <div class="notification-history-box">
+        <h2>Notification History</h2>
+        <p>Your last 5 notifications from us:</p>
+
+        <table class="styled-table" th:unless="${#lists.isEmpty(notificationHistory)}">
+            <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="notification : ${notificationHistory}">
+                <td th:text="${notification.subject}"></td>
+                <td th:text="${#temporals.format(notification.createdOn, 'dd MMM YYYY')}"></td>
+                <td th:if="${notification.status == 'SUCCEEDED'}"><span class="status succeeded">Succeeded</span></td>
+                <td th:if="${notification.status == 'FAILED'}"><span class="status failed">Failed</span></td>
+            </tr>
+            </tbody>
+        </table>
+        <!--            THIS TABLE WILL BE DISPLAYED WHEN THERE ARE NO NOTIFICATIONS-->
+        <table class="styled-table" th:if="${#lists.isEmpty(notificationHistory)}">
+            <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="small-informative-text-bottom">Every record in this table is equal to 1 notification of a certain type.</p>
+    </div>
+</div>
+</script>
+</body>
+</html>
