@@ -56,7 +56,6 @@ public class NotificationService {
                 .body(emailBody)
                 .build();
 
-        // Servive to Service
         ResponseEntity<Void> httpResponse;
         try {
             httpResponse = notificationClient.sendNotification(notificationRequest);
@@ -76,4 +75,12 @@ public class NotificationService {
         return httpResponse.getBody();
     }
 
+    public void updateNotificationPreference(UUID userId, boolean enabled) {
+
+        try {
+            notificationClient.updateNotificationPreference(userId, enabled);
+        } catch (Exception e) {
+            log.warn("Can't update notification preferences for user with id = [%s].".formatted(userId));
+        }
+    }
 }

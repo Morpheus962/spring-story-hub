@@ -3,6 +3,7 @@ package com.example.spring_story_hub.story.service;
 import com.example.spring_story_hub.exception.DomainException;
 import com.example.spring_story_hub.like.models.StoryLike;
 import com.example.spring_story_hub.like.repository.StoryLikeRepository;
+import com.example.spring_story_hub.notification.service.NotificationService;
 import com.example.spring_story_hub.report.models.Report;
 import com.example.spring_story_hub.story.models.Story;
 import com.example.spring_story_hub.story.repository.StoryRepository;
@@ -28,13 +29,15 @@ public class StoryService {
     private final StoryRepository storyRepository;
     private final UserService userService;
     private final StoryLikeRepository storyLikeRepository;
+    private final NotificationService notificationService;
 
     @Autowired
-    public StoryService(StoryRepository storyRepository, UserRepository userRepository, UserService userService, StoryLikeRepository storyLikeRepository) {
+    public StoryService(StoryRepository storyRepository, UserRepository userRepository, UserService userService, StoryLikeRepository storyLikeRepository, NotificationService notificationService) {
         this.storyRepository = storyRepository;
         this.userService = userService;
 
         this.storyLikeRepository = storyLikeRepository;
+        this.notificationService = notificationService;
     }
 
     public List<Story> findAllStories() {
@@ -92,6 +95,9 @@ public class StoryService {
                 .build();
         story.getStoryLikes().add(like);
         storyRepository.save(story);
+        String emailBody = "%s liked your story.".formatted(user.getUsername());
+        notificationService.sendNotification(story.getOwner().getId(), "New Like", emailBody);
+
     }
 
     @Cacheable("stories")
