@@ -1,6 +1,7 @@
 package com.example.spring_story_hub.user.service;
 
 import ch.qos.logback.core.model.Model;
+import com.example.spring_story_hub.exception.UsernameAlreadyExistException;
 import com.example.spring_story_hub.notification.service.NotificationService;
 import com.example.spring_story_hub.security.AuthenticationMetaData;
 import com.example.spring_story_hub.user.models.Role;
@@ -47,7 +48,7 @@ public class UserService implements UserDetailsService {
         Optional<User> optionalUser = userRepository.findByUsername(registerRequest.getUsername());
 
         if (optionalUser.isPresent()){
-            throw new IllegalArgumentException("Username %s is already taken.".formatted(registerRequest));
+            throw new UsernameAlreadyExistException("Username %s is already taken.".formatted(registerRequest));
         }
         User user = initializeUser(registerRequest);
 
