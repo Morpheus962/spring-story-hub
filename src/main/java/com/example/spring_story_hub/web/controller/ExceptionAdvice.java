@@ -1,5 +1,6 @@
 package com.example.spring_story_hub.web.controller;
 
+import com.example.spring_story_hub.exception.NotificationServiceFeignCallException;
 import com.example.spring_story_hub.exception.UsernameAlreadyExistException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,15 @@ public class ExceptionAdvice {
         return "redirect:/register";
     }
 
+    @ExceptionHandler(NotificationServiceFeignCallException.class)
+    public String handleNotificationFeignCallException(RedirectAttributes redirectAttributes, NotificationServiceFeignCallException exception) {
+
+        String message = exception.getMessage();
+
+        redirectAttributes.addFlashAttribute("clearHistoryErrorMessage", message);
+        return "redirect:/notifications";
+
+    }
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
             AccessDeniedException.class,

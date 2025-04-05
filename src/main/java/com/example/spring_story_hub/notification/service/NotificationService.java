@@ -1,5 +1,6 @@
 package com.example.spring_story_hub.notification.service;
 
+import com.example.spring_story_hub.exception.NotificationServiceFeignCallException;
 import com.example.spring_story_hub.notification.client.NotificationClient;
 import com.example.spring_story_hub.notification.client.dto.Notification;
 import com.example.spring_story_hub.notification.client.dto.NotificationPreference;
@@ -81,6 +82,14 @@ public class NotificationService {
             notificationClient.updateNotificationPreference(userId, enabled);
         } catch (Exception e) {
             log.warn("Can't update notification preferences for user with id = [%s].".formatted(userId));
+        }
+    }
+
+    public void clearNotifications(UUID userId) {
+        try {
+            notificationClient.clearHistory(userId);
+        } catch (Exception e) {
+            log.error("Unable to call notification-svc for clear notification history.".formatted(userId));
         }
     }
 }
