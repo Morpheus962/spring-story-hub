@@ -12,7 +12,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-
 public class CreateStoryRequest {
     @NotNull
     @Size(max = 30, message = "Title must not exceed 30 characters.")
