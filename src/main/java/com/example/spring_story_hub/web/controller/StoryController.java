@@ -113,16 +113,12 @@ public class StoryController {
     }
     @GetMapping("/{id}/edit")
     public ModelAndView editStoryPage(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetaData authenticationMetaData) {
-        // Retrieve the story by its ID
         Story story = storyService.findById(id);
 
-        // Ensure the current user has permission to edit this story
         if (!story.getOwner().getId().equals(authenticationMetaData.getId())) {
-            // You can redirect or return an error view if the user doesn't have permission
             return new ModelAndView("redirect:/stories");
         }
 
-        // Prepare the model and view
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("edit-story");
         modelAndView.addObject("story", story);

@@ -71,4 +71,6 @@ public class IndexController {
         modelAndView.addObject("role", authenticationMetaData.getRole());
         return modelAndView;
     }
+
+
 }
