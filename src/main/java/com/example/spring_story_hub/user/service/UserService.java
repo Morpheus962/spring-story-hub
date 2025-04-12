@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
         log.info("Successfully created user %s with id %s".formatted(user.getUsername(), user.getId()));
-        notificationService.saveNotificationPreference(user.getId(), false, null);
+        notificationService.saveNotificationPreference(user.getId(), false, user.getEmail());
 
         log.info("Successfully create new user account for username [%s] and id [%s]".formatted(user.getUsername(), user.getId()));
 
@@ -67,6 +67,7 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(Role.USER)
                 .isActive(true)
+                .email(registerRequest.getEmail())
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .build();
